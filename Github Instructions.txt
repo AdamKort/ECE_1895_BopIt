@@ -1,0 +1,13 @@
+1. Open VS Code and select the source control tab on the left
+2. Select clone repository and clone the ECE_1895_BopIt repository
+3. Clone into your documents/desktop (whatever is preferred)
+4. Open Git Bash
+5. Change directory to the ECE_1895_BopIt folder
+6. Run git config --global user.email "youremail@email.com"
+7. Run git config --global user.name "github username"
+8. git checkout -b branchName
+9. Go into VS Code and ensure in the bottom left it says your branchName
+11. Go into Git Bash and run git add -A
+12. Run git commit -m "MESSAGE"
+13. Run git push origin branchName
+14. Go to Git Hub and follow the commit pull request instructions
