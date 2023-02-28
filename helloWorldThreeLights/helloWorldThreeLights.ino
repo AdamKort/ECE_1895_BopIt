@@ -1,4 +1,5 @@
 // Adam Kort - 1895 Assignment 13 comment
+// Kaleb Foster - here is my comment... maybe
 
 const int ledPin1 = 8;   // this pin is the LED1 output
 const int ledPin2 = 9;   // this pin is the LED2 output
