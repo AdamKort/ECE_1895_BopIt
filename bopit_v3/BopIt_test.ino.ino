@@ -13,6 +13,7 @@ int spinInState = 0;
 int betInState = 0;
 int score = 0;
 int inputTime = 300;
+int inputRead = 0;
 
 bool pass_level = false;
 int randNum = 0;
@@ -55,6 +56,25 @@ void loop() {
     spinInState = digitalRead(spinIn);
     betInState = digitalRead(betIn);
     // add other two later
+    int temp = inputTime;
+    for(temp; temp>0; temp--){
+      spinInState = digitalRead(spinIn);
+      betInState = digitalRead(betIn);
+      
+      if(spinInState == 1)     
+        inputRead = 1;
+      else if(betInState == 1)
+          inputRead = 2;
+      // add the rest
+        
+      if(inputRead != 0)
+        break;      
+      delay(1);
+      
+    }  
+      
+    
+    
     if(betInState == HIGH) // (betInState == HIGH || loseInState == HIGH || winInState == HIGH)
       pass_level = false;
 
