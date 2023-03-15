@@ -69,6 +69,7 @@ void loop() {
     if (pass_level == false){
       lcd.setCursor(0,0); //Defining positon to write from first row,first column .
       lcd.print("MISINPUT!!")
+      lcd.setCursor(2,0);
       lcd.print("Final Score: "); //You can write 16 Characters per line .
       lcd.print(score);
       score = 0;
@@ -110,6 +111,7 @@ void loop() {
     if (pass_level == false){
       lcd.setCursor(0,0); //Defining positon to write from first row,first column .
       lcd.print("MISINPUT!!")
+      lcd.setCursor(2,0);
       lcd.print("Final Score: "); //You can write 16 Characters per line .
       lcd.print(score);
       score = 0;
