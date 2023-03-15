@@ -88,22 +88,22 @@ void loop() {
   }
   
   //The bet it function
-  if (randNum == 0) {
+  if (randNum == 1) {
     lcd.setCursor(0,0); //Defining positon to write from first row,first column .
-    lcd.print(" Spin it! "); //You can write 16 Characters per line .
+    lcd.print(" Bet it! "); //You can write 16 Characters per line .
     digitalWrite (spinIndicate, HIGH);
 
     delay(inputTime);
     spinInState = digitalRead(spinIn);
     betInState = digitalRead(betIn);
     // add other two later
-    if(betInState == HIGH) // (betInState == HIGH || loseInState == HIGH || winInState == HIGH)
+    if(spinInState == HIGH) // (betInState == HIGH || loseInState == HIGH || winInState == HIGH)
       pass_level = false;
 
-    if (spinInState == HIGH){
-      digitalWrite(spinOut, HIGH); // sets the digital pin 9 on
+    if (betInState == HIGH){
+      digitalWrite(betOut, HIGH); // sets the digital pin 9 on
       delay(100);  
-      digitalWrite(spinOut, LOW);  // sets the digital pin 9 off
+      digitalWrite(betOut, LOW);  // sets the digital pin 9 off
       pass_level = true;
     }
     
