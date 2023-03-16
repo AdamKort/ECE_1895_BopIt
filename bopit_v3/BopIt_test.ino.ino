@@ -98,7 +98,7 @@ void loop() {
 
   if (resetFlag == true){
     score = 0;
-    rstFlag = false;
+    resetFlag = false;
   }
 
   // change this to 4!
