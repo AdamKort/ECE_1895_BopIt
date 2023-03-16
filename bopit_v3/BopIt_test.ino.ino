@@ -70,10 +70,10 @@ void loop() {
   randNum = random(2);
 
   // every 10 successful attempt, decrement time to input by 25ms
-  if (score%10 == 0)
-    inputTime -= 250; 
+  if (score%5 == 0)
+    inputTime -= 125; 
 
-  delay(1000);
+  delay(500);
   Serial.print(randNum);
 
   //The spin it function
@@ -195,7 +195,9 @@ void loop() {
     lcd.print(" Play Again? "); //You can write 16 Characters per line .
     lcd.setCursor(0,1); //Defining positon to write from first row,first column .
     lcd.print(" Reset Game! "); //You can write 16 Characters per line . 
-    int rst = 0;   
+    delay(5000);
+    int rst = 0;  
+    inputTime = 3000; 
 
     delay(1000);
     resetFlag = true;
@@ -249,6 +251,7 @@ void setScore(bool input){
       lcd.setCursor(0,1);
       lcd.print("Final Score: "); //You can write 16 Characters per line .
       lcd.print(score);
+      delay(500);
       score = 0;
     }
     else{
@@ -256,6 +259,7 @@ void setScore(bool input){
       lcd.setCursor(1,0); //Defining positon to write from first row,first column .
       lcd.print("Score: "); //You can write 16 Characters per line .
       lcd.print(score);
+      delay(500);
     }
 }
 
