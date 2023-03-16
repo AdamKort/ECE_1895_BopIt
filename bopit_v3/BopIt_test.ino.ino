@@ -96,7 +96,7 @@ void setScore(bool input){
 //BEGINNING MAIN LOOP
 void loop() {
 
-  if (rstFlag == true){
+  if (resetFlag == true){
     score = 0;
     rstFlag = false;
   }
@@ -238,7 +238,7 @@ void loop() {
     while(true){
       rst = digitalRead(RESET);
       if (rst == 1){
-        rstFlag = true;
+        resetFlag = true;
         break;
       }      
     }
