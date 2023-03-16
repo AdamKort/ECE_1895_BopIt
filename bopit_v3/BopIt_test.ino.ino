@@ -11,6 +11,7 @@ const int winIn = 0;
 const int winOut = 0;
 const int loseIn = 0;
 const int loseOut = 0;
+const int RESET = 0;
 
 const int spinIndicate  = 8; //Indicate lights act like the 
 const int betIndicate = 7;
@@ -27,6 +28,7 @@ int inputTime = 300;
 int inputRead = 0;
 
 bool pass_level = false;
+bool resetFlag = false;
 int randNum = 0;
 
 //I2C pins declaration
@@ -93,6 +95,12 @@ void setScore(bool input){
 
 //BEGINNING MAIN LOOP
 void loop() {
+
+  if (rstFlag == true){
+    score = 0;
+    rstFlag = false;
+  }
+
   // change this to 4!
   randNum = random(2);
 
@@ -221,11 +229,21 @@ void loop() {
   */
 
   while(score == 0){
-    delay(300);
-    // fail contition met at some point
-    // need to reset the game
-    // could do this via an input?
-  }
+    lcd.setCursor(0,0); //Defining positon to write from first row,first column .
+    lcd.print(" Play Again? "); //You can write 16 Characters per line .
+    lcd.setCursor(2,0); //Defining positon to write from first row,first column .
+    lcd.print(" Reset Game! "); //You can write 16 Characters per line . 
+    int rst = 0;   
 
+    while(true){
+      rst = digitalRead(RESET);
+      if (rst == 1){
+        rstFlag = true;
+        break;
+      }      
+    }
+    
+    break;
+  }
 
 }
