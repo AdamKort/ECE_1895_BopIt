@@ -24,7 +24,7 @@ int betInState = 0;
 int winInState = 0;
 int loseInState = 0;
 int score = 0;
-int inputTime = 300;
+int inputTime = 3000;
 int inputRead = 0;
 
 bool pass_level = false;
@@ -80,7 +80,7 @@ void setScore(bool input){
     if (input == false){
       lcd.setCursor(0,0); //Defining positon to write from first row,first column .
       lcd.print("MISINPUT!!");
-      lcd.setCursor(2,0);
+      lcd.setCursor(0,1);
       lcd.print("Final Score: "); //You can write 16 Characters per line .
       lcd.print(score);
       score = 0;
@@ -126,13 +126,15 @@ void loop() {
           delay(100);  
           digitalWrite(spinOut, LOW);  // sets the digital pin 9 off
           pass_level = true;
+          setScore(pass_level);
           break;          
       default:
           pass_level = false;
+          setScore(pass_level);
           break;
     }    
 
-    setScore(pass_level);
+    
       
     delay(1000);
     lcd.clear();
@@ -143,7 +145,7 @@ void loop() {
   if (randNum == 1) {
     lcd.setCursor(0,0); //Defining positon to write from first row,first column .
     lcd.print(" Bet it! "); //You can write 16 Characters per line .
-    digitalWrite (spinIndicate, HIGH);
+    digitalWrite (betIndicate, HIGH);
 
     int temp = inputTime;
     sample(temp);
@@ -154,13 +156,13 @@ void loop() {
           delay(100);  
           digitalWrite(betOut, LOW);  // sets the digital pin 9 off
           pass_level = true;
+          setScore(pass_level);
           break;          
       default:
           pass_level = false;
+          setScore(pass_level);
           break;
     }     
-
-    setScore(pass_level);
   
     delay(1000);
     lcd.clear();
@@ -175,10 +177,8 @@ void loop() {
     lcd.setCursor(0,0); //Defining positon to write from first row,first column .
     lcd.print(" Win it! "); //You can write 16 Characters per line .
     digitalWrite (winIndicate, HIGH);
-
     int temp = inputTime;
     sample(temp);
-
     switch (inputRead){
       case 3:
           digitalWrite(winOut, HIGH); // sets the digital pin 9 on
@@ -190,23 +190,19 @@ void loop() {
           pass_level = false;
           break;
     }     
-
     setScore(pass_level);
   
     delay(1000);
     lcd.clear();
     digitalWrite (winIndicate, LOW);
   }
-
    //The lose it function
   if (randNum == 3) {
     lcd.setCursor(0,0); //Defining positon to write from first row,first column .
     lcd.print(" Lose it! "); //You can write 16 Characters per line .
     digitalWrite (loseIndicate, HIGH);
-
     int temp = inputTime;
     sample(temp);
-
     switch (inputRead){
       case 4:
           digitalWrite(loseOut, HIGH); // sets the digital pin 9 on
@@ -218,31 +214,32 @@ void loop() {
           pass_level = false;
           break;
     }     
-
     setScore(pass_level);
   
     delay(1000);
     lcd.clear();
     digitalWrite (loseIndicate, LOW);
   } 
-
   */
 
   while(score == 0){
     lcd.setCursor(0,0); //Defining positon to write from first row,first column .
     lcd.print(" Play Again? "); //You can write 16 Characters per line .
-    lcd.setCursor(2,0); //Defining positon to write from first row,first column .
+    lcd.setCursor(0,1); //Defining positon to write from first row,first column .
     lcd.print(" Reset Game! "); //You can write 16 Characters per line . 
     int rst = 0;   
 
-    while(true){
+    delay(1000);
+    resetFlag = true;
+    /*while(true){
       rst = digitalRead(RESET);
       if (rst == 1){
         resetFlag = true;
         break;
       }      
     }
-    
+    */
+    lcd.clear();
     break;
   }
 
