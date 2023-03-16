@@ -48,14 +48,16 @@ void setup() {
 
 // MAIN LOOP
 void loop() {
+  // main menu
   if (resetFlag == true){
     score = 0;
     while(true){
+      // print to LCD and wait for user to hit RESET button to start game
       lcd.setCursor(0,0); 
       lcd.print(" This is Slot-it"); 
       lcd.setCursor(0,1); 
       lcd.print(" Press start! ");
-      betInState = digitalRead(betIn);
+      betInState = digitalRead(betIn);  // temporarily using betIt input
 
       // wait for user to start game
       if (betInState == HIGH){
