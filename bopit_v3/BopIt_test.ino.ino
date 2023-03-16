@@ -28,7 +28,7 @@ int inputTime = 3000;
 int inputRead = 0;
 
 bool pass_level = false;
-bool resetFlag = false;
+bool resetFlag = true;
 int randNum = 0;
 
 //I2C pins declaration
@@ -44,53 +44,6 @@ void setup() {
 
   lcd.begin(16,2);//Defining 16 columns and 2 rows of lcd display
   lcd.backlight();//To Power ON the back light
-
-  // I think this is the right syntax for the interrupts? TBD
-  // attachInterrupt(digitalPinInterrupt(PIN), ISR, mode)
-}
-
-void sample(int time){
-    for(time; time>0; time--){
-      // read in all 4 inputs
-      spinInState = digitalRead(spinIn);
-      betInState = digitalRead(betIn);
-      winInState = digitalRead(winIn);
-      loseInState = digitalRead(loseIn);
-      
-      // set inputRead if an input is read
-      if(spinInState == 1)     
-        inputRead = 1;
-      else if(betInState == 1)
-        inputRead = 2;
-      else if(winInState == 1)
-        inputRead = 3;
-      else if(loseInState == 1)
-        inputRead = 4;    
-        
-      // break if any input was detected  
-      if(inputRead != 0)
-        break; 
-
-      // delay and sample until input is read or input time limit reached       
-      delay(1);
-    }
-}
-
-void setScore(bool input){
-    if (input == false){
-      lcd.setCursor(0,0); //Defining positon to write from first row,first column .
-      lcd.print("MISINPUT!!");
-      lcd.setCursor(0,1);
-      lcd.print("Final Score: "); //You can write 16 Characters per line .
-      lcd.print(score);
-      score = 0;
-    }
-    else{
-      score++;
-      lcd.setCursor(1,0); //Defining positon to write from first row,first column .
-      lcd.print("Score: "); //You can write 16 Characters per line .
-      lcd.print(score);
-    }
 }
 
 //BEGINNING MAIN LOOP
@@ -98,7 +51,19 @@ void loop() {
 
   if (resetFlag == true){
     score = 0;
-    resetFlag = false;
+    while(true){
+      lcd.setCursor(0,0); 
+      lcd.print(" This is Slot-it"); 
+      lcd.setCursor(0,1); 
+      lcd.print(" Press start! ");
+      betInState = digitalRead(betIn);
+        //If the user successfully "spun it"
+      if (betInState == HIGH){
+          resetFlag = false;
+          lcd.clear();
+          break;
+        }
+    }  
   }
 
   // change this to 4!
@@ -106,7 +71,7 @@ void loop() {
 
   // every 10 successful attempt, decrement time to input by 25ms
   if (score%10 == 0)
-    inputTime -= 25; 
+    inputTime -= 250; 
 
   delay(1000);
   Serial.print(randNum);
@@ -127,15 +92,16 @@ void loop() {
           digitalWrite(spinOut, LOW);  // sets the digital pin 9 off
           pass_level = true;
           setScore(pass_level);
+          inputRead = 0;
           break;          
       default:
           pass_level = false;
+          inputRead = 0;
           setScore(pass_level);
           break;
-    }    
-
-    
+    }     
       
+
     delay(1000);
     lcd.clear();
     digitalWrite (spinIndicate, LOW);
@@ -157,13 +123,15 @@ void loop() {
           digitalWrite(betOut, LOW);  // sets the digital pin 9 off
           pass_level = true;
           setScore(pass_level);
+          inputRead = 0;
           break;          
       default:
           pass_level = false;
+          inputRead = 0;
           setScore(pass_level);
           break;
-    }     
-  
+    }    
+
     delay(1000);
     lcd.clear();
     digitalWrite (betIndicate, LOW);
@@ -231,6 +199,7 @@ void loop() {
 
     delay(1000);
     resetFlag = true;
+
     /*while(true){
       rst = digitalRead(RESET);
       if (rst == 1){
@@ -244,3 +213,49 @@ void loop() {
   }
 
 }
+
+void sample(int time){
+    for(time; time>0; time--){
+      // read in all 4 inputs
+      spinInState = digitalRead(spinIn);
+      betInState = digitalRead(betIn);
+      winInState = digitalRead(winIn);
+      loseInState = digitalRead(loseIn);
+     
+      // set inputRead if an input is read
+      if(spinInState == 1)     
+        inputRead = 1;
+      else if(betInState == 1)
+        inputRead = 2;
+      else if(winInState == 1)
+        inputRead = 3;
+      else if(loseInState == 1)
+        inputRead = 4;    
+        
+      // break if any input was detected  
+      if(inputRead != 0)
+        break;        
+    
+      
+      // delay and sample until input is read or input time limit reached       
+      delay(1);
+    }
+}
+
+void setScore(bool input){
+    if (input == false){
+      lcd.setCursor(0,0); //Defining positon to write from first row,first column .
+      lcd.print("MISINPUT!!");
+      lcd.setCursor(0,1);
+      lcd.print("Final Score: "); //You can write 16 Characters per line .
+      lcd.print(score);
+      score = 0;
+    }
+    else{
+      score++;
+      lcd.setCursor(1,0); //Defining positon to write from first row,first column .
+      lcd.print("Score: "); //You can write 16 Characters per line .
+      lcd.print(score);
+    }
+}
+
