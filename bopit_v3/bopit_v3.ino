@@ -13,7 +13,9 @@ int spinInState = 0;
 int betInState = 0;
 int score = 0;
 
-bool pass_level = false;
+bool pass_level;
+bool game_over;
+
 int randNum = 0;
 
 //I2C pins declaration
@@ -33,10 +35,26 @@ void setup() {
 
 //BEGINNING MAIN LOOP
 void loop() {
-  randNum = random(2);
 
+  if (game_over = true){
+    while(true){
+      lcd.setCursor(0,0); 
+      lcd.print(" This is Slot-it"); 
+      lcd.setCursor(0,1); 
+      lcd.print(" Press start! ");
+      betInState = digitalRead(betIn);
+        //If the user successfully "spun it"
+      if (betInState == HIGH){
+          game_over = false;
+          lcd.clear();
+          break;
+        }
+    }
+  }
+
+  randNum = random(2);
   delay(1000);
-  Serial.print(randNum);
+
   //The spin it function
   if (randNum == 0) {
     lcd.setCursor(0,0); //Defining positon to write from first row,first column .
@@ -46,6 +64,7 @@ void loop() {
     while (true)//time(NULL) - startTime > secs)
     {
       spinInState = digitalRead(spinIn);
+      betInState = digitalRead(betIn);
       //If the user successfully "spun it"
       if (spinInState == HIGH){
         digitalWrite(spinOut, HIGH); // sets the digital pin 9 on
@@ -54,6 +73,11 @@ void loop() {
         pass_level = true;
         break;
       }
+
+      if (betInState == HIGH){
+        pass_level = false;
+        break;
+      } 
     }
 
     if (pass_level == true){
@@ -61,9 +85,20 @@ void loop() {
       lcd.setCursor(1,0); //Defining positon to write from first row,first column .
       lcd.print("Score: "); //You can write 16 Characters per line .
       lcd.print(score);
+      game_over = false;
+    }
+
+    if (pass_level == false){
+      lcd.setCursor(0,0); //Defining positon to write from first row,first column .
+      lcd.print(" YOU LOSE :( "); //You can write 16 Characters per line .
+      lcd.setCursor(0,1); //Defining positon to write from second row,first column .
+      lcd.print("Final Score: "); //You can write 16 Characters per line .
+      lcd.print(score);
+      game_over = true;
+      delay(3000);
     }
   
-    delay(1000);
+    delay(4000);
     lcd.clear();
     digitalWrite (spinIndicate, LOW);
   }
@@ -74,12 +109,14 @@ void loop() {
     lcd.print(" Bet it! "); //You can write 16 Characters per line .
     digitalWrite (betIndicate, HIGH);
 
-    time_t secs = 3; // 3 seconds
+    time_t secs = 3000; // 3 seconds
 
     time_t startTime = time(NULL);
     while (true)//time(NULL) - startTime > secs)
     {
       betInState = digitalRead(betIn);
+      spinInState = digitalRead(spinIn);
+
       //If the user successfully "bet it"
       if (betInState == HIGH){
         digitalWrite(betOut, HIGH); // sets the digital pin 9 on, lights up success light
@@ -88,6 +125,11 @@ void loop() {
         pass_level = true;
         break;
       }  
+
+      if (spinInState == HIGH){
+        pass_level = false;
+        break;
+      } 
     }
 
     if (pass_level == true){
@@ -95,6 +137,17 @@ void loop() {
       lcd.setCursor(1,0); //Defining positon to write from first row,first column .
       lcd.print("Score: "); //You can write 16 Characters per line .
       lcd.print(score);
+      game_over = false;
+    }
+
+    if (pass_level == false){
+      lcd.setCursor(0,0); //Defining positon to write from first row,first column .
+      lcd.print(" YOU LOSE :( "); //You can write 16 Characters per line .
+      lcd.setCursor(0,1); //Defining positon to write from second row,first column .
+      lcd.print("Final Score: "); //You can write 16 Characters per line .
+      lcd.print(score);
+      game_over = true;
+      delay(3000);
     }
   
     delay(1000);
