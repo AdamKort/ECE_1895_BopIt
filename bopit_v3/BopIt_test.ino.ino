@@ -2,16 +2,19 @@
 #include <LiquidCrystal_I2C.h>
 #include <time.h>
 
+// digital input and output pins for each function
 const int spinIn = 6;
 const int spinOut = 8;
 const int betIn = 2;
 const int betOut = 7;
-// EDIT THE ZEROS
 const int loseIn = 10;;
 const int loseOut = 0;
+
+// digital pins for fail state and reset
 const int MISINPUT = 9;
 const int RESET = 0;
 
+// initialized input states for functions
 int spinInState = 0;
 int betInState = 0;
 int loseInState = 0;
@@ -19,6 +22,7 @@ int score = 0;
 int inputTime = 3000;
 int inputRead = 0;
 
+// initialized misc variables
 bool pass_level = false;
 bool resetFlag = true;
 int randNum = 0;
@@ -26,23 +30,23 @@ int randNum = 0;
 //I2C pins declaration
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 void setup() {
-  pinMode(betIn, INPUT);   // Button input for the bet it feature
-  pinMode(spinIn, INPUT);  // Rotary Encoder input for the spin it feature
-  pinMode(loseIn, INPUT);  // IR Sensor input for lose it feature
-  pinMode(betOut, OUTPUT);    // Lights up the LED for bet it
-  pinMode(spinOut, OUTPUT);    // Lights up the LED for spin it
+  pinMode(betIn, INPUT);  
+  pinMode(spinIn, INPUT);  
+  pinMode(loseIn, INPUT); 
+  pinMode(betOut, OUTPUT);   
+  pinMode(spinOut, OUTPUT); 
   pinMode(loseOut, OUTPUT);
   pinMode(MISINPUT, OUTPUT);
   Serial.begin(9600);
   digitalWrite(betOut, 1);
   digitalWrite(spinOut, 1);
 
-  lcd.begin(16,2);//Defining 16 columns and 2 rows of lcd display
-  lcd.backlight();//To Power ON the back light
+  lcd.begin(16,2);  // initialize LCD
+  lcd.backlight();  // power on backlight for LCD
 
 }
 
-//BEGINNING MAIN LOOP
+// MAIN LOOP
 void loop() {
   if (resetFlag == true){
     score = 0;
@@ -75,10 +79,10 @@ void loop() {
   if (randNum == 0) {
     digitalWrite(spinOut, 0);
     delay(50);
-    lcd.setCursor(0,0); //Defining positon to write from first row,first column .
-    lcd.print(" Spin it! "); //You can write 16 Characters per line .
-    
+    lcd.setCursor(0,0); 
+    lcd.print(" Spin it! "); 
 
+    // sample the inputs for inputTime
     int temp = inputTime;
     sample(temp); 
     digitalWrite(spinOut, 1); 
@@ -105,9 +109,8 @@ void loop() {
   if (randNum == 1) {
     digitalWrite(betOut, 0);
     delay(50);
-    lcd.setCursor(0,0); //Defining positon to write from first row,first column .
-    lcd.print(" Bet it! "); //You can write 16 Characters per line .
-    
+    lcd.setCursor(0,0);
+    lcd.print(" Bet it! ");     
 
     int temp = inputTime;
     sample(temp);
@@ -132,8 +135,8 @@ void loop() {
 
   //The lose it function
   if (randNum == 2) {
-    lcd.setCursor(0,0); //Defining positon to write from first row,first column .
-    lcd.print(" Lose it! "); //You can write 16 Characters per line .
+    lcd.setCursor(0,0); 
+    lcd.print(" Lose it! "); 
 
     int temp = inputTime;
     sample(temp);
@@ -156,15 +159,18 @@ void loop() {
   } 
 
   while(score == 0){
-    lcd.setCursor(0,0); //Defining positon to write from first row,first column .
-    lcd.print(" Play Again? "); //You can write 16 Characters per line .
-    lcd.setCursor(0,1); //Defining positon to write from first row,first column .
-    lcd.print(" Reset Game! "); //You can write 16 Characters per line . 
+    lcd.setCursor(0,0); 
+    lcd.print(" Play Again? "); 
+    lcd.setCursor(0,1); 
+    lcd.print(" Reset Game! "); 
     delay(2000);
+
+    // hard reset for testing
     int rst = 0;  
     inputTime = 3000; 
     resetFlag = true;
 
+    // reset game when reset button is pressed
     /*while(true){
       rst = digitalRead(RESET);
       if (rst == 1){
@@ -205,11 +211,12 @@ void sample(int time){
 }
 
 void setScore(bool input){
+  // fail screen when level is failed
     if (input == false){
-      lcd.setCursor(0,0); //Defining positon to write from first row,first column .
+      lcd.setCursor(0,0);.
       lcd.print("MISINPUT!!");
       lcd.setCursor(0,1);
-      lcd.print("Final Score: "); //You can write 16 Characters per line .
+      lcd.print("Final Score: "); 
       lcd.print(score);
       digitalWrite(MISINPUT, 0);
       delay(100);
@@ -217,12 +224,12 @@ void setScore(bool input){
       delay(3000);
       score = 0;
     }
+    // increase score when input is correct
     else{
       score++;
-      lcd.setCursor(1,0); //Defining positon to write from first row,first column .
-      lcd.print("Score: "); //You can write 16 Characters per line .
+      lcd.setCursor(1,0); 
+      lcd.print("Score: "); 
       lcd.print(score);
       delay(500);
     }
 }
-
