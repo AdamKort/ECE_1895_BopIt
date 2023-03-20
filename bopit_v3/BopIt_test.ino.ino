@@ -7,12 +7,11 @@ const int spinIn = 6;
 const int spinOut = 8;
 const int betIn = 2;
 const int betOut = 7;
-const int loseIn = 10;;
-const int loseOut = 0;
+const int loseIn = 10;
+//const int loseOut = 0;  // change to 17
 
-// digital pins for fail state and reset
-const int MISINPUT = 9;
-const int RESET = 0;
+// digital pins for fail state trigger
+const int MISINPUT = 9; // change to 15
 
 // initialized input states for functions
 int spinInState = 0;
@@ -35,21 +34,67 @@ void setup() {
   pinMode(loseIn, INPUT); 
   pinMode(betOut, OUTPUT);   
   pinMode(spinOut, OUTPUT); 
-  pinMode(loseOut, OUTPUT);
+  //pinMode(loseOut, OUTPUT);
   pinMode(MISINPUT, OUTPUT);
   Serial.begin(9600);
   digitalWrite(betOut, 1);
   digitalWrite(spinOut, 1);
+  //digitalWrite(loseOut, 1);
+  digitalWrite(MISINPUT, 1);
 
   lcd.begin(16,2);  // initialize LCD
   lcd.backlight();  // power on backlight for LCD
 
 }
 
-// MAIN LOOP
-void loop() {
-  // main menu
-  if (resetFlag == true){
+void sample(int time){
+    for(time; time>0; time--){
+      // read in all 4 inputs
+      spinInState = digitalRead(spinIn);
+      betInState = digitalRead(betIn);
+      loseInState = digitalRead(loseIn);
+     
+      // set inputRead if an input is read
+      if(spinInState == 1)     
+        inputRead = 1;
+      else if(betInState == 1)
+        inputRead = 2;
+      else if(loseInState == 1)
+        inputRead = 3;    
+        
+      // break if any input was detected  
+      if(inputRead != 0)
+        break;   
+      
+      // delay and sample until input is read or input time limit reached       
+      delay(1);
+    }
+}
+
+void setScore(bool input){
+  // fail screen when level is failed
+    if (input == false){
+      lcd.setCursor(0,0);
+      lcd.print("MISINPUT!!");
+      lcd.setCursor(0,1);
+      lcd.print("Final Score: "); 
+      lcd.print(score);
+      digitalWrite(MISINPUT, 0);
+      delay(10000);
+      digitalWrite(MISINPUT, 1);
+      score = 0;
+    }
+    // increase score when input is correct
+    else{
+      score++;
+      lcd.setCursor(1,0); 
+      lcd.print("Score: "); 
+      lcd.print(score);
+      delay(500);
+    }
+}
+
+void menu(void){
     score = 0;
     while(true){
       // print to LCD and wait for user to hit RESET button to start game
@@ -57,16 +102,50 @@ void loop() {
       lcd.print(" This is Slot-it"); 
       lcd.setCursor(0,1); 
       lcd.print(" Press start! ");
-      betInState = digitalRead(betIn);  // temporarily using betIt input
+      betInState = digitalRead(betIn);  // button press to exit menu
 
       // wait for user to start game
       if (betInState == HIGH){
-          resetFlag = false;
-          lcd.clear();
-          break;
-        }
-    }  
+        resetFlag = false;
+        lcd.clear();
+        break;
+      }
+  }  
+}
+
+void reset(void){
+  while(true){
+    lcd.setCursor(0,0); 
+    lcd.print(" Play Again? "); 
+    lcd.setCursor(0,1); 
+    lcd.print(" Reset Game! "); 
+
+    // reset game when reset button is pressed
+    betInState = digitalRead(betIn);  // button press for reset
+    if (betInState == HIGH){
+        resetFlag = true;
+        lcd.clear();
+        break;
+      }
   }
+
+}
+
+
+// MAIN LOOP
+void loop() {
+
+  // testing mp3 trig
+  while (true){
+    digitalWrite(betOut, 0);
+    delay(2000);
+    digitalWrite(betOut, 1);
+    delay(2000);
+  }
+
+  // main menu
+  if (resetFlag == true)
+    menu();
 
   randNum = random(3);
 
@@ -102,7 +181,6 @@ void loop() {
           break;
     }     
       
-
     delay(1000);
     lcd.clear();
   }
@@ -160,78 +238,7 @@ void loop() {
     lcd.clear();
   } 
 
-  while(score == 0){
-    lcd.setCursor(0,0); 
-    lcd.print(" Play Again? "); 
-    lcd.setCursor(0,1); 
-    lcd.print(" Reset Game! "); 
-    delay(2000);
-
-    // hard reset for testing
-    int rst = 0;  
-    inputTime = 3000; 
-    resetFlag = true;
-
-    // reset game when reset button is pressed
-    /*while(true){
-      rst = digitalRead(RESET);
-      if (rst == 1){
-        resetFlag = true;
-        break;
-      }      
-    }*/
+  if(score == 0)
+    reset();
     
-    lcd.clear();
-    break;
-  }
-
-}
-
-void sample(int time){
-    for(time; time>0; time--){
-      // read in all 4 inputs
-      spinInState = digitalRead(spinIn);
-      betInState = digitalRead(betIn);
-      loseInState = digitalRead(loseIn);
-     
-      // set inputRead if an input is read
-      if(spinInState == 1)     
-        inputRead = 1;
-      else if(betInState == 1)
-        inputRead = 2;
-      else if(loseInState == 1)
-        inputRead = 3;    
-        
-      // break if any input was detected  
-      if(inputRead != 0)
-        break;        
-    
-      
-      // delay and sample until input is read or input time limit reached       
-      delay(1);
-    }
-}
-
-void setScore(bool input){
-  // fail screen when level is failed
-    if (input == false){
-      lcd.setCursor(0,0);.
-      lcd.print("MISINPUT!!");
-      lcd.setCursor(0,1);
-      lcd.print("Final Score: "); 
-      lcd.print(score);
-      digitalWrite(MISINPUT, 0);
-      delay(100);
-      digitalWrite(MISINPUT, 1);
-      delay(3000);
-      score = 0;
-    }
-    // increase score when input is correct
-    else{
-      score++;
-      lcd.setCursor(1,0); 
-      lcd.print("Score: "); 
-      lcd.print(score);
-      delay(500);
-    }
 }
