@@ -37,10 +37,10 @@ void setup() {
   //pinMode(loseOut, OUTPUT);
   pinMode(MISINPUT, OUTPUT);
   Serial.begin(9600);
-  digitalWrite(betOut, 1);
-  digitalWrite(spinOut, 1);
+  //digitalWrite(betOut, 1);
+  //digitalWrite(spinOut, 1);
   //digitalWrite(loseOut, 1);
-  digitalWrite(MISINPUT, 1);
+  //digitalWrite(MISINPUT, 1);
 
   lcd.begin(16,2);  // initialize LCD
   lcd.backlight();  // power on backlight for LCD
@@ -136,12 +136,16 @@ void reset(void){
 void loop() {
 
   // testing mp3 trig
-  while (true){
-    digitalWrite(betOut, 0);
-    delay(2000);
-    digitalWrite(betOut, 1);
-    delay(2000);
-  }
+  /*while (true){
+    digitalWrite(MISINPUT, 0);
+    delay(10000);
+    digitalWrite(MISINPUT, 1);
+    delay(10000);
+  }*/
+
+  digitalWrite(MISINPUT, 1);
+  digitalWrite(betIn, 1);
+  digitalWrite(spinIn, 1);
 
   // main menu
   if (resetFlag == true)
