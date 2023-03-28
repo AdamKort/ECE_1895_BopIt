@@ -272,7 +272,7 @@ void loop() {
   if(score == 0)
     reset();
     
-  if(score == 10){
+  if(score == 99){
     //myDFPlayer.play(5);
     lcd.setCursor(0,0); 
     lcd.print("Congrats You Win"); 
